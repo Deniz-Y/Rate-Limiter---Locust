@@ -14,21 +14,23 @@ class User(HttpUser):
     # The code will be runned with a number of concurrent users
     wait_time = constant(60)
     
-    num = random.randint(100,900)
-    # ip = determine(num)
 
 
     @task
     def first(self):
         # self.ip
-        ip = random.randint(100,900)
-        self.client.get('/get', headers={'x-fowarded-for': 'ip: %s' % str(ip)})
-        self.client.post('/post', headers={'x-fowarded-for': 'ip: %s' % str(ip)})
-        with self.client.get('/get', catch_response = True, headers={'x-fowarded-for': 'ip: %s' % str(ip)}) as resp:
+        ip = random.randint(100000,999999)
+        
+        self.client.get('/get', headers={'X-Forwarded-For': 'ip: %s' % str(ip)})
+        self.client.post('/post', headers={'X-Forwarded-For': 'ip: %s' % str(ip)})
+
+        # COMMENT OUT THE FOLLOWİNG CODE FOR TESTING RESPONSE TIME WITH AND WITHOUT RATE LIMITER
+
+        with self.client.get('/get', catch_response = True, headers={'X-Forwarded-For': 'ip: %s' % str(ip)}) as resp:
             if resp.status_code == 429:
                 resp.success()
                 logging.info("Rate limiter is successful")
-        with self.client.post('/post', catch_response = True, headers={'x-fowarded-for': 'ip: %s' % str(ip)}) as resp:
+        with self.client.post('/post', catch_response = True, headers={'X-Forwarded-For': 'ip: %s' % str(ip)}) as resp:
             if resp.status_code == 429:
                 resp.success()
                 logging.info("Rate limiter is successful")
