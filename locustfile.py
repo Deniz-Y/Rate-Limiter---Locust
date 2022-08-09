@@ -1,8 +1,5 @@
-
-from urllib import response
 from locust import task, HttpUser, constant
 import logging
-import time
 import random
 
 class User(HttpUser):
@@ -14,8 +11,6 @@ class User(HttpUser):
     # The code will be runned with a number of concurrent users
     wait_time = constant(60)
     
-
-
     @task
     def first(self):
         # self.ip
